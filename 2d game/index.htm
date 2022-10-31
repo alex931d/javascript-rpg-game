@@ -347,25 +347,7 @@
 
 
 
-            else if (!keys.left.pressed && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
-              player.frames = 1;
-              player.currentSprite = player.sprites.stand.idle;
-              player.currentCropWidth = player.sprites.stand.cropWidth;
-              player.width = player.sprites.stand.width;
-             
-            }
-            else if (!keys.up.pressed && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
-              player.frames = 1;
-              player.currentSprite = player.sprites.stand.idle;
-              player.currentCropWidth = player.sprites.stand.cropWidth;
-              player.width = player.sprites.stand.width;
-            }  
-            else if (!keys.down.pressed && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
-              player.frames = 1;
-              player.currentSprite = player.sprites.stand.idle;
-              player.currentCropWidth = player.sprites.stand.cropWidth;
-              player.width = player.sprites.stand.width;
-            }
+      
      
           }
            console.log(player.direction);
