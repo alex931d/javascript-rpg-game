@@ -63,36 +63,100 @@
   
   
   
- }  
+ }    
+        
  document.addEventListener('load',function() {
-    
-  });
 
+  });
+      setInterval(update,200); // idle animation loop
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
-
+      
+     
+      
+       //   SpriteUpRun.src ="UpRun.png";
+       //   SpriteDownRun.src =  "DownRun.png";
+       
       /* The player is just a simple 2d point with a moveTo function. */
-      const Player = function(x, y,height,width,TILE_SIZE,direction) {
+      const Player = function(x, y,direction) {
         this.width = width += TILE_SIZE - 4;
         this.height = width += TILE_SIZE - 4;
         this.x = x; this.y = y;
         // this.x_old = TILE_SIZE * 4 - TILE_SIZE * 0.5 + 2;
         // this.y_old = TILE_SIZE * 8;
         this.direction = direction;
+        this.frames = 0;
+        this.width = scaled_size
+        this.velocity = 16;
+        this.sprites = {
+         stand:{
+          idle: idle = new Image(),
+          cropWidth: sprite_size,
+          width: scaled_size
+         },
+         run:{
+           right: rightrun= new Image(),
+           cropWidth: sprite_size * 1, //  multiples current sprite size with 2 when right 
+           width: scaled_size * 2
+         },
+         up:{
+          up: uprun= new Image(),
+           cropWidth: sprite_size * 1, //  multiples current sprite size with 2 when right 
+           width: scaled_size * 2
+         },
+         down:{
+          down: downrun= new Image(),
+           cropWidth: sprite_size * 1, //  multiples current sprite size with 2 when right 
+           width: scaled_size * 2
+         },
+         left:{
+          left: leftrun = new Image(),
+           cropWidth: sprite_size * 1, //  multiples current sprite size with 2 when right 
+           width: scaled_size * 2
+         }
+        
 
+       }
+       this.currentSprite = this.sprites.stand.idle;
+       this.currentCropWidth = 16;
       };
-
+     
+     
       Player.prototype = {
 
         moveTo:function(x, y) {
 
           /* Gradually moves the player closer to x, y every time moveTo is called. */
-          this.x += (x - this.x - scaled_size * 0.5) * 0.1;
-          this.y += (y - this.y - scaled_size * 0.5) * 0.1;
+          this.x += (x - this.x - scaled_size * 0.5) * 0.2;
+          this.y += (y - this.y - scaled_size * 0.5) * 0.2;
 
+        }, 
+   
+        Draw:function(image){ 
+          var player_sprite = 16;
+          this.height = 120;
+          this.width = 120;
+         
+          /* Draw the player. Remember to offset by the viewport position and
+          center screen position. */
+          context.drawImage(this.currentSprite, this.currentCropWidth * player.frames, 0, this.currentCropWidth , sprite_size, Math.round(player.x - viewport.x + width * 0.5 - viewport.w * 0.5), Math.round(player.y - viewport.y + height * 0.5 - viewport.h * 0.5), scaled_size, scaled_size);
         }
 
       };
+      
+      function update() {
+        
+           player.frames++;
+          if (player.frames >= 3 || this.currentSprite === player.sprites.stand.idle || this.currentSprite === player.sprites.up.up || this.currentSprite === player.sprites.left.left) {
+            player.frames = 0;
+            
+          }
+          
+         //   else if (player.frames >= 3 && this.currentSprite === player.sprites.stand.right) {
+          //    player.frames = 0;
+          //  }
+      }
+   
 
       /* The viewport (camera) is a rectangular region that defines the visible
       area of the map to be drawn. It's x, y coordinates are relative to the map
@@ -111,7 +175,7 @@
           this.x = x - this.w * 0.5;// Rigid scrolling
           this.y = y - this.w * 0.5;
 
-          // Smooth scrolling (forgot to put this in the video)
+        
           //this.x += (x - this.x - this.w * 0.5) * 0.05;
           //this.y += (y - this.y - this.h * 0.5) * 0.05;
 
@@ -119,7 +183,7 @@
 
       };
 
-      var scaled_size = 80;// The size I want my sprites to be;
+      var scaled_size = 65;// The size I want my sprites to be;
     
       var columns   = 24;// columns and rows in map below
       var rows      = 24;
@@ -179,10 +243,24 @@
       /* The width and height of the inside of the browser window */
       var height = document.documentElement.clientHeight;
       var width  = document.documentElement.clientWidth;
-      var player_sprite = 64;
-      var direction = null;
+      
+      
     
-      var player = new Player(100, 100,20,20,TILE_SIZE,direction);
+      var player = new Player(100, 100,this.direction);
+      const keys = {
+        right: {
+          pressed: false
+        },
+        left: {
+          pressed: false
+        },
+        up: {
+          pressed: false
+        },
+        down: {
+          pressed: false
+        }
+      }
       var viewport = new Viewport(600, 600, 800, 800);
 
       var pointer = { x:0, y:0 };// The adjusted mouse position
@@ -190,7 +268,7 @@
       function loop() {// The game loop
 
         window.requestAnimationFrame(loop);
-
+         
           var height = document.documentElement.clientHeight;
           var width  = document.documentElement.clientWidth;
 
@@ -241,19 +319,68 @@
               const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
                
             }
+            if (keys.right.pressed && player.direction === 'right' && player.currentSprite !== player.sprites.run.right){
+              player.frames = 1;
+              player.currentSprite = player.sprites.run.right;
+              player.currentCropWidth = player.sprites.run.cropWidth;
+              player.width = player.sprites.run.width;
+            }
+            else if (keys.left.pressed && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.left.left;
+              player.currentCropWidth = player.sprites.left.cropWidth;
+              player.width = player.sprites.left.width;
+             
+            }
+            else if (keys.up.pressed && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.up.up;
+              player.currentCropWidth = player.sprites.up.cropWidth;
+              player.width = player.sprites.up.width;
+            }  
+            else if (keys.down.pressed && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.down.down;
+              player.currentCropWidth = player.sprites.down.cropWidth;
+              player.width = player.sprites.down.width;
+            }
 
+
+
+            else if (!keys.left.pressed && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+             
+            }
+            else if (!keys.up.pressed && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+            }  
+            else if (!keys.down.pressed && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+            }
+     
           }
-           console.log(direction);
-        if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
-          scaled_size = 1000;
-          
-        }
-
+           console.log(player.direction);
+      //   if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
+     //      scaled_size = 1000;
+      //     
+      //   }
+         
         // gets player position
           let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
           console.log(player_index);
           // change the tile if player stands on it
           if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
+
+    
 
 
           if (pointer.y < 0) {
@@ -264,7 +391,7 @@
           } else if (pointer.y + scaled_size > buffer.canvas.height ) {
 
             console.log('hit wall');
-            pointer.y = 0;
+           // pointer.y = 0;
          
 
           }
@@ -276,17 +403,15 @@
 
           } else if (pointer.x + scaled_size > buffer.canvas.width ) {
             console.log('hit wall');
-          pointer.x = 0;
+           // pointer.x = 0;
          
 
           }
           
         
       
-
-          /* Draw the player. Remember to offset by the viewport position and
-          center screen position. */
-          context.drawImage(player_sheet, player_sprite, 0, sprite_size, sprite_size, Math.round(player.x - viewport.x + width * 0.5 - viewport.w * 0.5), Math.round(player.y - viewport.y + height * 0.5 - viewport.h * 0.5), scaled_size, scaled_size);
+       
+          player.Draw(idle);
 
           /* Draw the viewport rectangle. */
           context.fillStyle = "#FF0000";
@@ -300,48 +425,60 @@
         
  
       }
-
+     
       var tile_sheet = new Image();
       var player_sheet = new Image();
       var layer2_sheet = new Image();
+     
 
       tile_sheet.addEventListener("load", (event) => { loop(); });
 
       tile_sheet.src = "map3.png";
       layer2_sheet.src = "layer2.png";
       player_sheet.src = "player.png";
-
+      rightrun.src = "LeftRightRun.png";
+      idle.src = "idle.png";
+      uprun.src = "UpRun.png";
+      downrun.src = "DownRun.png";
+      leftrun.src = "leftrun.png";
       document.addEventListener("keydown", (event) => {
      
      switch (event.key) {
     case "ArrowDown": 
-    pointer.y += 10;  
-    direction = 'down';
-    player_sheet.style.transform = "rotate(180deg)";
-  
-    player_sprite = 87;
+    pointer.y += player.velocity; 
+    
+    player.direction = 'down'; 
+    keys.down.pressed = true ; 
+ 
+
+   
       // code for "down arrow" key press.
       break;
     case "ArrowUp": 
-    pointer.y -= 10;
-    direction = 'up';
-    player_sprite = 87;
+    pointer.y -= player.velocity;
+    player.direction = 'up'; 
+    keys.up.pressed = true ; 
+   
       // code for "up arrow" key press.
       break;
     case "ArrowLeft":
-    pointer.x -= 10;   
-    direction = 'left';
-    player_sheet.style.transform = "rotate(90deg)";
+    pointer.x -= player.velocity;  
+    player.direction = 'left'; 
+    keys.left.pressed = true ; 
     
-    player_sprite = 60;
+   
+  
+    
   
 
       // code for "left arrow" key press.
       break;
     case "ArrowRight":   
-       pointer.x += 10;
-       direction = 'right';
-       player_sprite = 60;
+       pointer.x += player.velocity;
+       player.direction = 'right';
+       keys.right.pressed = true ; 
+     
+      
       // code for "right arrow" key press.
       break;
     default:
@@ -352,6 +489,49 @@
      
 
       });
+
+      document.addEventListener("keyup", (event) => {
+     
+     switch (event.key) {
+    case "ArrowDown": 
+    keys.down.pressed = false ; 
+  
+    
+    player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+     
+  
+ 
+   
+      break;
+    case "ArrowUp": 
+    keys.up.pressed = false ; 
+    player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+   
+      break;
+    case "ArrowLeft":
+    keys.left.pressed = false ; 
+    player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+      break;
+    case "ArrowRight":   
+    keys.right.pressed = false ; 
+    
+    player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+     
+     
+      break;
+    default:
+   
+      
+  }
+});
 
     </script>
 
