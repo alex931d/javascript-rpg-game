@@ -17,6 +17,7 @@
          background-color:black; height:100%; position:relative; width:100%;
         /* background-image: url(grass.png); */
         position: relative;
+        display:grid
           
         
         }
@@ -25,6 +26,8 @@
           box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75);
 -webkit-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75);
 -moz-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75); 
+align-self: center;
+justify-content: center;
    
       }
       div{
@@ -55,19 +58,45 @@
     
 
     <script type = "text/javascript">
+
+
+
      
- function menu() {
-  const ui = document.createElement('div');
-  ui.appendChild(body);
+class Animator {
+
+constructor(frame_set, delay) {
   
-  
-  
-  
- }    
+  this.count = 0;
+  this.delay = delay;
+
+  this.frame_set = frame_set;// animation frames
+  this.frame_index = 0;// playhead
+  this.frame_value = frame_set[0];// current frame
+
+}
+
+animate() {
+
+  this.count ++;
+
+  if (this.count > this.delay) {
+
+    this.count = 0;
+
+    this.frame_index = (this.frame_index == this.frame_set.length - 1) ? 0 : this.frame_index + 1;
+    this.frame_value = this.frame_set[this.frame_index];
+
+
+  }
+
+}
+
+}
         
  document.addEventListener('load',function() {
 
   });
+     
       setInterval(update,200); // idle animation loop
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
@@ -78,6 +107,9 @@
        //   SpriteDownRun.src =  "DownRun.png";
        
       /* The player is just a simple 2d point with a moveTo function. */
+      const Animation = function () {
+        this.frames = 0;
+      }
       const Player = function(x, y,direction) {
         this.width = width += TILE_SIZE - 4;
         this.height = width += TILE_SIZE - 4;
@@ -140,6 +172,8 @@
           /* Draw the player. Remember to offset by the viewport position and
           center screen position. */
           context.drawImage(this.currentSprite, this.currentCropWidth * player.frames, 0, this.currentCropWidth , sprite_size, Math.round(player.x - viewport.x + width * 0.5 - viewport.w * 0.5), Math.round(player.y - viewport.y + height * 0.5 - viewport.h * 0.5), scaled_size, scaled_size);
+
+      
         }
 
       };
@@ -150,12 +184,15 @@
           if (player.frames >= 3 || this.currentSprite === player.sprites.stand.idle || this.currentSprite === player.sprites.up.up || this.currentSprite === player.sprites.left.left) {
             player.frames = 0;
             
-          }
+          } 
+          
+ 
+      }
           
          //   else if (player.frames >= 3 && this.currentSprite === player.sprites.stand.right) {
           //    player.frames = 0;
           //  }
-      }
+      
    
 
       /* The viewport (camera) is a rectangular region that defines the visible
@@ -237,6 +274,14 @@
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18];
 
+                var animations = {
+
+                    18: new Animator([21, 18], 10),
+                    20: new Animator([21, 7,10,15], 10)
+                   
+
+                }; 
+
       /* The drawing context of the on screen canvas */
       var context = document.querySelector("canvas").getContext("2d");
       var buffer= document.createElement("canvas").getContext("2d");
@@ -247,6 +292,7 @@
       
     
       var player = new Player(100, 100,this.direction);
+      var animation = new Animation();
       const keys = {
         right: {
           pressed: false
@@ -268,6 +314,13 @@
       function loop() {// The game loop
 
         window.requestAnimationFrame(loop);
+
+          Object.values(animations).forEach(animator => {
+
+           animator.animate();
+
+          });
+        
          
           var height = document.documentElement.clientHeight;
           var width  = document.documentElement.clientWidth;
@@ -297,9 +350,17 @@
           if (x_max > columns) x_max = columns;
           if (y_max > rows) y_max = rows;
 
+       
+
+            // map loop
+           for (let index = layer2.length - 1; index > -1; -- index) {
+            let value1 = layer2[index];
+            if (animations[value1]) value1 = animations[value1].frame_value;
+           }
           /* Now we loop through the tiles in the map, but only between the min
           and max columns and rows that the viewport is over. To do this we use two
           for loops, one for the columns (x) and one for the rows (y) of the map. */
+ 
           for (let x = x_min; x < x_max; x ++) {
 
             for (let y = y_min; y < y_max; y ++) {
@@ -362,6 +423,7 @@
           
           // change the tile if player stands on it
           if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
+    
 
     
 
@@ -424,6 +486,7 @@
       uprun.src = "UpRun.png";
       downrun.src = "DownRun.png";
       leftrun.src = "leftrun.png";
+     
       document.addEventListener("keydown", (event) => {
      
      switch (event.key) {
