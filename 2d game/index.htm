@@ -15,12 +15,18 @@
 
       html, body {
          background-color:black; height:100%; position:relative; width:100%;
-        background-image: url(grass.png);
+        /* background-image: url(grass.png); */
         position: relative;
+          
         
         }
 
-      canvas { height:100%; position:fixed; width:100%; }
+      canvas { height:100%; position:fixed; width:100%;
+          box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75);
+-webkit-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75);
+-moz-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75); 
+   
+      }
       div{
         display: flex;
         justify-content: center;
@@ -31,6 +37,12 @@
         height: 100px;
         width: 100px;
         background-color: violet;
+      }
+      canvas img{
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+         
       }
 
     </style>
@@ -51,10 +63,16 @@
   
   
   
- }
-      const TILE_SIZE = 16;
+ }  
+ document.addEventListener('load',function() {
+    
+  });
+
+      const TILE_SIZE = 16; // size of the sprites
+      var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
+
       /* The player is just a simple 2d point with a moveTo function. */
-      const Player = function(x, y, x_old, y_old,height,width,TILE_SIZE) {
+      const Player = function(x, y,height,width,TILE_SIZE) {
         this.width = width += TILE_SIZE - 4;
         this.height = width += TILE_SIZE - 4;
         this.x = x; this.y = y;
@@ -101,7 +119,7 @@
       };
 
       var scaled_size = 80;// The size I want my sprites to be;
-      var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
+    
       var columns   = 24;// columns and rows in map below
       var rows      = 24;
       var map = [23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
@@ -161,7 +179,7 @@
       var height = document.documentElement.clientHeight;
       var width  = document.documentElement.clientWidth;
       var player_sprite = 64;
-      var player = new Player(100, 100);
+      var player = new Player(100, 100,20,20,TILE_SIZE);
       var viewport = new Viewport(600, 600, 800, 800);
 
       var pointer = { x:0, y:0 };// The adjusted mouse position
@@ -210,24 +228,30 @@
               var tile_y = Math.floor(y * scaled_size - viewport.y + height * 0.5 - viewport.h * 0.5);// Tile y destination for drawing
 
               // Draw tile from tile_sheet
-              context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
-
+              const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
+              
                 /* Draw the buffer to the canvas. This takes care of scaling. */
               // this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
               // buffer.canvas.height = rows * columns; // = 576
               // buffer.canvas.width = rows * columns;  // = 576
               // Draw layer 2 on top of map
               let value2 = layer2[y * columns + x];// Tile value
-               context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
+              const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
+               
             }
 
           }
-      
+         
+        if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
+          scaled_size = 1000;
+          
+        }
+
         // gets player position
           let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
           console.log(player_index);
           // change the tile if player stands on it
-          if (map[player_index] == 23) map[player_index] = 22; 
+          if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
 
 
           if (pointer.y < 0) {
