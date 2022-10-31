@@ -359,6 +359,7 @@
         // gets player position
           let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
           console.log(player_index);
+          
           // change the tile if player stands on it
           if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
 
