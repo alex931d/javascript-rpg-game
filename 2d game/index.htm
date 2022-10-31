@@ -72,12 +72,13 @@
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
 
       /* The player is just a simple 2d point with a moveTo function. */
-      const Player = function(x, y,height,width,TILE_SIZE) {
+      const Player = function(x, y,height,width,TILE_SIZE,direction) {
         this.width = width += TILE_SIZE - 4;
         this.height = width += TILE_SIZE - 4;
         this.x = x; this.y = y;
-        this.x_old = TILE_SIZE * 4 - TILE_SIZE * 0.5 + 2;
-        this.y_old = TILE_SIZE * 8;
+        // this.x_old = TILE_SIZE * 4 - TILE_SIZE * 0.5 + 2;
+        // this.y_old = TILE_SIZE * 8;
+        this.direction = direction;
 
       };
 
@@ -179,7 +180,9 @@
       var height = document.documentElement.clientHeight;
       var width  = document.documentElement.clientWidth;
       var player_sprite = 64;
-      var player = new Player(100, 100,20,20,TILE_SIZE);
+      var direction = null;
+    
+      var player = new Player(100, 100,20,20,TILE_SIZE,direction);
       var viewport = new Viewport(600, 600, 800, 800);
 
       var pointer = { x:0, y:0 };// The adjusted mouse position
@@ -231,9 +234,8 @@
               const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
               
                 /* Draw the buffer to the canvas. This takes care of scaling. */
-              // this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
-              // buffer.canvas.height = rows * columns; // = 576
-              // buffer.canvas.width = rows * columns;  // = 576
+              this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
+             
               // Draw layer 2 on top of map
               let value2 = layer2[y * columns + x];// Tile value
               const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
@@ -241,7 +243,7 @@
             }
 
           }
-         
+           console.log(direction);
         if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
           scaled_size = 1000;
           
@@ -257,26 +259,25 @@
           if (pointer.y < 0) {
             console.log('hit wall');
             pointer.y = 0;
-         
+            
 
-          } else if (pointer.y + scaled_size > context.canvas.height) {
+          } else if (pointer.y + scaled_size > buffer.canvas.height ) {
 
             console.log('hit wall');
             pointer.y = 0;
-           
+         
 
           }
 
           if (pointer.x < 0) {
             console.log('hit wall');
           pointer.x = 0;
-         
-
-          } else if (pointer.x + scaled_size > context.canvas.width) {
-            console.log('hit wall');
-
-          pointer.x = 0;
         
+
+          } else if (pointer.x + scaled_size > buffer.canvas.width ) {
+            console.log('hit wall');
+          pointer.x = 0;
+         
 
           }
           
@@ -314,7 +315,8 @@
      
      switch (event.key) {
     case "ArrowDown": 
-    pointer.y += 10;
+    pointer.y += 10;  
+    direction = 'down';
     player_sheet.style.transform = "rotate(180deg)";
   
     player_sprite = 87;
@@ -322,11 +324,13 @@
       break;
     case "ArrowUp": 
     pointer.y -= 10;
+    direction = 'up';
     player_sprite = 87;
       // code for "up arrow" key press.
       break;
     case "ArrowLeft":
-    pointer.x -= 10; 
+    pointer.x -= 10;   
+    direction = 'left';
     player_sheet.style.transform = "rotate(90deg)";
     
     player_sprite = 60;
@@ -336,10 +340,12 @@
       break;
     case "ArrowRight":   
        pointer.x += 10;
+       direction = 'right';
        player_sprite = 60;
       // code for "right arrow" key press.
       break;
     default:
+   
       return; // Quit when this doesn't handle the key event.
       
   }
