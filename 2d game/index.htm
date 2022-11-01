@@ -40,7 +40,9 @@ justify-content: center;
         height: 100%;
         width: 100%;
         background-color: rgba(132, 128, 132, 0.53);
-        background-image: url(./grass.png);
+        background-image: url(./background/main\ background.webp);
+        background-repeat: no-repeat;
+        background-size: cover;
         flex-direction: column;
         position: fixed;
        
@@ -89,13 +91,7 @@ justify-content: center;
         font-family: 'VT323', monospace;
         font-size: 4rem;
       }
-      #myVideo {
-      position: fixed;
-       right: 0;
-       bottom: 0;
-       min-width: 100%; 
-      min-height: 100%;
-      }
+ 
      
      
     
@@ -119,10 +115,7 @@ justify-content: center;
   <body>
 
     <canvas></canvas>
-    <video autoplay muted loop id="myVideo">
-      <source src="rain.mp4" type="video/mp4">
-      Your browser does not support HTML5 video.
-    </video>
+ 
     <div class="menu-wrapper">
        
       <div class="top">
@@ -137,6 +130,131 @@ justify-content: center;
 
 
      
+
+
+
+
+
+
+ var mainMusic = new Audio('./sounds/main.mp3');
+
+mainMusic.play();
+
+
+const btn = document.querySelector('.play');
+const menu = document.querySelector('.menu-wrapper');
+btn.addEventListener('click',function () {
+  
+  btn.classList.toggle('hide');
+  menu.classList.toggle('hide');
+  PlayGame();
+  mainMusic.pause();
+  
+
+
+});
+// start game
+function PlayGame() {
+      
+     
+ document.addEventListener('load',function() {
+    
+  });
+
+  class Sprite {
+
+constructor(x, y, sx, sy, w, h) {
+
+  this.x = x; this.y = y; this.sx = sx; this.sy = sy; this.w = w; this.h = h;
+
+  this.vx = this.vy = 0;
+
+}
+
+collidePoint(point) {
+
+  if (point.x < this.x || point.x > this.x + this.w || point.y < this.y || point.y > this.y + this.h) return false;
+
+  return true;
+
+}
+
+collideRect(sprite) {
+  
+  if (this.x > sprite.x + sprite.w || this.x + this.w < sprite.x || this.y > sprite.y + sprite.h || this.y + this.h < sprite.y) return false;
+
+  return true;
+      
+}
+
+updatePosition(gravity, friction, floor) {
+
+  this.vy += gravity;
+
+  this.x += this.vx;
+  this.y += this.vy;
+
+  this.vx *= friction;
+  this.vy *= friction;
+
+  if (this.y + this.h > floor) {
+
+    this.y = floor - this.h;
+    this.vy = 0;
+
+  }
+
+}
+
+}
+
+     
+  class Inventory {
+
+constructor(x, y, w, h) {
+
+  this.x = x; this.y = y; this.w = w; this.h = h;
+  this.color = "rgba(255, 255, 255, 0.5)";
+  this.items = new Array();
+  this.columns = 4;
+
+}
+
+addItem(sprite) {
+  
+  if (this.items.length == this.columns) {
+
+    sprite.vy = -4;
+    return false;
+
+  }
+
+  this.items.push(sprite)
+
+  return true;
+      
+}
+
+dropItem(index, x, y) {
+
+  var item = this.items[index];
+
+  if (item) {
+
+    this.items.splice(index, 1);
+    item.x = x;
+    item.y = y - item.h;
+    item.vx = Math.random() * 2 - 1;
+    item.vy = Math.random() * -5 - 1;
+
+  } return item;
+
+}
+
+}
+
+Inventory.prototype.collidePoint = Sprite.prototype.collidePoint;
+
 class Animator {
 
 constructor(frame_set, delay) {
@@ -167,35 +285,6 @@ animate() {
 }
 
 }
-
- var mainMusic = new Audio('./sounds/main.mp3');
-
-mainMusic.play();
-
-
-const btn = document.querySelector('.play');
-const video = document.querySelector('#myVideo');
-const menu = document.querySelector('.menu-wrapper');
-btn.addEventListener('click',function () {
-  
-  btn.classList.toggle('hide');
-  video.classList.toggle('hide');
-  menu.classList.toggle('hide');
-  PlayGame();
-  mainMusic.pause();
-  
-
-
-});
-// start game
-function PlayGame() {
-      
-     
- document.addEventListener('load',function() {
-    
-  });
-     
-
      
       setInterval(updateMap,50); // map animation
       setInterval(update,200); // idle animation loop
@@ -324,7 +413,7 @@ function PlayGame() {
       };
 
       var scaled_size = 65;// The size I want my sprites to be;
-    
+      var tile_set = new Image();
       var columns   = 24;// columns and rows in map below
       var rows      = 24;
       var map = [23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
@@ -377,13 +466,7 @@ function PlayGame() {
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18];
 
-                var animations = {
-
-                    18: new Animator([21, 18], 10),
-                    20: new Animator([21, 7,10,15], 10)
-                   
-
-                }; 
+            
 
       /* The drawing context of the on screen canvas */
       var context = document.querySelector("canvas").getContext("2d");
@@ -395,7 +478,27 @@ function PlayGame() {
       
     
       var player = new Player(100, 100,this.direction);
-      var animation = new Animation();
+      var animation = new Animation();  
+
+      var animations = {
+
+       
+        20: new Animator([22,23,24,25,26], 40)
+                   
+
+      }; 
+
+      var inventory = new Inventory(120, 8, 128, 32);
+      var items = [new Sprite(Math.random() * 240, 100, 96, 16, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 0, 32, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 16, 32, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 32, 32, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 48, 32, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 64, 32, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 80, 32, TILE_SIZE, TILE_SIZE),
+                   new Sprite(Math.random() * 240, 100, 96, 32, TILE_SIZE, TILE_SIZE)];
+
+
       const keys = {
         right: {
           pressed: false
@@ -412,9 +515,10 @@ function PlayGame() {
       }
       var viewport = new Viewport(600, 600, 800, 800);
 
-      var pointer = { x:0, y:0 };// The adjusted mouse position
+      var pointer = { x:20, y:20,down:false };// The adjusted mouse position
 
       function loop() {// The game loop
+        let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
 
         window.requestAnimationFrame(loop);
 
@@ -423,7 +527,7 @@ function PlayGame() {
            animator.animate();
 
           });
-        
+          
          
           var height = document.documentElement.clientHeight;
           var width  = document.documentElement.clientWidth;
@@ -433,6 +537,24 @@ function PlayGame() {
           context.canvas.width  = width;
 
           context.imageSmoothingEnabled = false;// prevent antialiasing of drawn image
+               // Click inventory
+          if (pointer.down && inventory.items.length > 0 && inventory.collidePoint(pointer)) {
+          
+          let index = Math.floor((pointer.x - inventory.x) / (inventory.w / inventory.columns));
+
+          pointer.x = player.x + player.w * 0.5;
+
+          let item = inventory.dropItem(index, player.x, player.y);
+
+          if (item) items.unshift(item);
+
+        }
+
+
+
+
+
+        
 
           player.moveTo(pointer.x, pointer.y);
           viewport.scrollTo(player.x, player.y);
@@ -455,11 +577,7 @@ function PlayGame() {
 
        
 
-            // map loop
-           for (let index = layer2.length - 1; index > -1; -- index) {
-            let value1 = layer2[index];
-            if (animations[value1]) value1 = animations[value1].frame_value;
-           }
+          
           /* Now we loop through the tiles in the map, but only between the min
           and max columns and rows that the viewport is over. To do this we use two
           for loops, one for the columns (x) and one for the rows (y) of the map. */
@@ -469,8 +587,9 @@ function PlayGame() {
             for (let y = y_min; y < y_max; y ++) {
 
               let value = map[y * columns + x];// Tile value
+              let layer2value = layer2[y * columns + x];// Tile value
              
-             
+         
 
               var tile_x = Math.floor(x * scaled_size - viewport.x + width * 0.5 - viewport.w * 0.5);// Tile x destination for drawing
               var tile_y = Math.floor(y * scaled_size - viewport.y + height * 0.5 - viewport.h * 0.5);// Tile y destination for drawing
@@ -482,7 +601,8 @@ function PlayGame() {
               // this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
              
               // Draw layer 2 on top of map
-              let value2 = layer2[y * columns + x];// Tile value
+              let value2 = layer2[y * columns + x];// Tile value   
+                if (animations[value2]) value2 = animations[value2].frame_value;
               const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
                
             }
@@ -513,18 +633,56 @@ function PlayGame() {
             }
 
 
+            var front_item_index = undefined;// Index of item at very front of screen 
+         /* Draw the items */
+        for (let index = items.length - 1; index > -1; -- index) {
 
+          let item = items[index];
+
+          if (item.y + item.h >= player_index && item.collideRect(player) && pointer.down && item.collidePoint(pointer)) {
+              
+            front_item_index = index;// store the frontmost item index
+
+          }
+
+          item.updatePosition(1, 1, player_index);
+
+          buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, Math.round(item.x), Math.round(item.y), item.w, item.h);
+
+        }
+
+         // If there is an item selected, add it to the inventory
+         if (front_item_index != undefined && inventory.addItem(items[front_item_index])) items.splice(front_item_index, 1); 
+
+        /* Draw the inventory */
+        buffer.fillStyle = inventory.color;
+        buffer.fillRect(inventory.x, inventory.y, inventory.w, inventory.h);
+
+        for (let index = inventory.items.length - 1; index > -1; -- index) {
+
+        let item = inventory.items[index];
+        let dest_x = inventory.x + index * TILE_SIZE * 2;
+    
+        buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, dest_x, inventory.y, TILE_SIZE * 2, TILE_SIZE * 2);
+
+        }
+
+          /* Draw to the display context */
+          context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, context.canvas.width, context.canvas.height);
+
+        pointer.down = false;
       
      
-          }
+          } // end of loop
+
+
+          buffer.canvas.height = rows * TILE_SIZE;
+         buffer.canvas.width  = columns * TILE_SIZE;
+         buffer.imageSmoothingEnabled = false;
           
-      //   if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
-     //      scaled_size = 1000;
-      //     
-      //   }
-         
-        // gets player position
-          let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
+
+        
+          
          
           
           // change the tile if player stands on it
@@ -580,7 +738,10 @@ function PlayGame() {
       var tile_sheet = new Image();
       var player_sheet = new Image();
       var layer2_sheet = new Image();
-     
+
+
+      tile_set.addEventListener("load", (event) => { loop(); });
+      tile_set.src = "weapons.png";
 
       tile_sheet.addEventListener("load", (event) => { loop(); });
 
