@@ -6,9 +6,11 @@
 
     <meta charset = "utf-8">
     <meta name = "viewport" content = "width=device-width">
-
-    <title>Tile Scroll</title>
-
+   
+    <title>Action-light</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
 
       * { margin:0; padding:0; }
@@ -27,16 +29,44 @@
 -moz-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75); 
    
       }
-      div{
+      .menu-wrapper{
         display: flex;
         justify-content: center;
         align-items: center;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 100px;
-        width: 100px;
-        background-color: violet;
+        margin: 0 auto;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(132, 128, 132, 0.53);
+        background-image: url(./grass.png);
+      
+      }
+      .top{
+        height: 40vh;
+        width: 50vh;
+        border: 2px solid white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+        flex-direction: column;
+        
+      }
+      button{
+        border: none;
+        width: 50%;
+        height: 20%;
+        font-weight: 700;
+        font-family: 'VT323', monospace;
+        font-size: 2rem;
+        color: white;
+         background-color: rgba(115, 219, 150, 0.646);
+         border: none;
+         
+        
+        
+      }
+      button:nth-child(2){
+        margin-top: 20px;
       }
       canvas img{
         image-rendering: pixelated;
@@ -52,27 +82,33 @@
   <body>
 
     <canvas></canvas>
-    
-
+    <div class="menu-wrapper">
+      <div class="top">
+        <button>Play Game</button>
+        <button>Save Game</button>
+      </div>
+    </div>
+    <script src="./js/soundmanager2.js"></script>
     <script type = "text/javascript">
-     
- function menu() {
-  const ui = document.createElement('div');
-  ui.appendChild(body);
-  
-  
-  
-  
- }    
-        
- document.addEventListener('load',function() {
 
+
+
+
+function PlayMap() {
+  
+
+ document.addEventListener('load',function() {
+    
   });
-      setInterval(updateMap,50);
+
+      var mainMusic = new Audio('./sounds/main.mp3');
+
+      mainMusic.play();
+      setInterval(updateMap,50); // map animation
       setInterval(update,200); // idle animation loop
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
-      
+   
      
       
        //   SpriteUpRun.src ="UpRun.png";
@@ -358,7 +394,7 @@
       
      
           }
-           console.log(player.direction);
+          
       //   if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
      //      scaled_size = 1000;
       //     
@@ -366,7 +402,7 @@
          
         // gets player position
           let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
-          console.log(player_index);
+         
           
           // change the tile if player stands on it
           if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
@@ -522,8 +558,8 @@
    
       
   }
-});
-
+ });
+}
     </script>
 
   </body>
