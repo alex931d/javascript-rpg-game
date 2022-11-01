@@ -6,9 +6,11 @@
 
     <meta charset = "utf-8">
     <meta name = "viewport" content = "width=device-width">
-
-    <title>Tile Scroll</title>
-
+   
+    <title>Action-light</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
 
       * { margin:0; padding:0; }
@@ -30,16 +32,44 @@ align-self: center;
 justify-content: center;
    
       }
-      div{
+      .menu-wrapper{
         display: flex;
         justify-content: center;
         align-items: center;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 100px;
-        width: 100px;
-        background-color: violet;
+        margin: 0 auto;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(132, 128, 132, 0.53);
+        background-image: url(./grass.png);
+      
+      }
+      .top{
+        height: 40vh;
+        width: 50vh;
+        border: 2px solid white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+        flex-direction: column;
+        
+      }
+      button{
+        border: none;
+        width: 50%;
+        height: 20%;
+        font-weight: 700;
+        font-family: 'VT323', monospace;
+        font-size: 2rem;
+        color: white;
+         background-color: rgba(115, 219, 150, 0.646);
+         border: none;
+         
+        
+        
+      }
+      button:nth-child(2){
+        margin-top: 20px;
       }
       canvas img{
         image-rendering: pixelated;
@@ -55,8 +85,13 @@ justify-content: center;
   <body>
 
     <canvas></canvas>
-    
-
+    <div class="menu-wrapper">
+      <div class="top">
+        <button>Play Game</button>
+        <button>Save Game</button>
+      </div>
+    </div>
+    <script src="./js/soundmanager2.js"></script>
     <script type = "text/javascript">
 
 
@@ -92,15 +127,21 @@ animate() {
 }
 
 }
+
         
  document.addEventListener('load',function() {
-
+    
   });
      
+
+      var mainMusic = new Audio('./sounds/main.mp3');
+
+      mainMusic.play();
+      setInterval(updateMap,50); // map animation
       setInterval(update,200); // idle animation loop
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
-      
+   
      
       
        //   SpriteUpRun.src ="UpRun.png";
@@ -153,14 +194,16 @@ animate() {
        this.currentCropWidth = 16;
       };
      
-     
+      function updateMap() {
+        
+      }
       Player.prototype = {
 
         moveTo:function(x, y) {
 
           /* Gradually moves the player closer to x, y every time moveTo is called. */
-          this.x += (x - this.x - scaled_size * 0.5) * 0.2;
-          this.y += (y - this.y - scaled_size * 0.5) * 0.2;
+          this.x += (x - this.x - scaled_size * 0.5) * 0.5;
+          this.y += (y - this.y - scaled_size * 0.5) * 0.5;
 
         }, 
    
@@ -366,6 +409,9 @@ animate() {
             for (let y = y_min; y < y_max; y ++) {
 
               let value = map[y * columns + x];// Tile value
+             
+             
+
               var tile_x = Math.floor(x * scaled_size - viewport.x + width * 0.5 - viewport.w * 0.5);// Tile x destination for drawing
               var tile_y = Math.floor(y * scaled_size - viewport.y + height * 0.5 - viewport.h * 0.5);// Tile y destination for drawing
 
@@ -411,7 +457,7 @@ animate() {
       
      
           }
-           console.log(player.direction);
+          
       //   if (context.canvas.height >= "900px" && context.canvas.width >= "900px") {
      //      scaled_size = 1000;
       //     
@@ -419,7 +465,7 @@ animate() {
          
         // gets player position
           let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
-          console.log(player_index);
+         
           
           // change the tile if player stands on it
           if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
@@ -577,8 +623,8 @@ animate() {
    
       
   }
-});
-
+ });
+}
     </script>
 
   </body>
