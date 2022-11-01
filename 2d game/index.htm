@@ -41,12 +41,15 @@ justify-content: center;
         width: 100%;
         background-color: rgba(132, 128, 132, 0.53);
         background-image: url(./grass.png);
+        flex-direction: column;
+        position: fixed;
+       
       
       }
       .top{
         height: 40vh;
         width: 50vh;
-        border: 2px solid white;
+     
         display: flex;
         justify-content: center;
         align-items: center;
@@ -54,21 +57,49 @@ justify-content: center;
         flex-direction: column;
         
       }
-      button{
+      a{
         border: none;
-        width: 50%;
-        height: 20%;
+          padding-left: 90px;
+       padding-right: 90px;
+ 
+    
         font-weight: 700;
         font-family: 'VT323', monospace;
         font-size: 2rem;
         color: white;
          background-color: rgba(115, 219, 150, 0.646);
          border: none;
+         margin-top: 30px;
+         text-align: center;
+         cursor: pointer;
          
         
         
       }
-      button:nth-child(2){
+      a:hover{
+        background-color: rgb(115, 219, 150);
+       
+       padding-left: 100px;
+       padding-right: 100px;
+       padding-top: 10px;
+       padding-bottom: 10px;
+      }
+      h1{
+        color: white;
+        font-family: 'VT323', monospace;
+        font-size: 4rem;
+      }
+      #myVideo {
+      position: fixed;
+       right: 0;
+       bottom: 0;
+       min-width: 100%; 
+      min-height: 100%;
+      }
+     
+     
+    
+      a:nth-child(2){
         margin-top: 20px;
       }
       canvas img{
@@ -76,6 +107,9 @@ justify-content: center;
         image-rendering: -moz-crisp-edges;
         image-rendering: crisp-edges;
          
+      }
+      .hide{
+        display: none;
       }
 
     </style>
@@ -85,10 +119,16 @@ justify-content: center;
   <body>
 
     <canvas></canvas>
+    <video autoplay muted loop id="myVideo">
+      <source src="rain.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
     <div class="menu-wrapper">
+       
       <div class="top">
-        <button>Play Game</button>
-        <button>Save Game</button>
+        <h1>RPG Action Game</h1>
+       <a class="play">Play Game</a>
+        <a class="Load">Load Game</a>
       </div>
     </div>
     <script src="./js/soundmanager2.js"></script>
@@ -128,15 +168,35 @@ animate() {
 
 }
 
-        
+ var mainMusic = new Audio('./sounds/main.mp3');
+
+mainMusic.play();
+
+
+const btn = document.querySelector('.play');
+const video = document.querySelector('#myVideo');
+const menu = document.querySelector('.menu-wrapper');
+btn.addEventListener('click',function () {
+  
+  btn.classList.toggle('hide');
+  video.classList.toggle('hide');
+  menu.classList.toggle('hide');
+  PlayGame();
+  mainMusic.pause();
+  
+
+
+});
+// start game
+function PlayGame() {
+      
+     
  document.addEventListener('load',function() {
     
   });
      
 
-      var mainMusic = new Audio('./sounds/main.mp3');
-
-      mainMusic.play();
+     
       setInterval(updateMap,50); // map animation
       setInterval(update,200); // idle animation loop
       const TILE_SIZE = 16; // size of the sprites
@@ -419,7 +479,7 @@ animate() {
               const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
               
                 /* Draw the buffer to the canvas. This takes care of scaling. */
-              this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
+              // this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
              
               // Draw layer 2 on top of map
               let value2 = layer2[y * columns + x];// Tile value
@@ -624,7 +684,7 @@ animate() {
       
   }
  });
-}
+} 
     </script>
 
   </body>
