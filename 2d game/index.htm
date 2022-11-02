@@ -24,7 +24,7 @@
         
         }
 
-      canvas { height:100%; position:fixed; width:100%;
+      canvas { height:100%;  width:100%;
           box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75);
 -webkit-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75);
 -moz-box-shadow: 9px 10px 5px 0px rgba(255,255,255,0.75); 
@@ -124,7 +124,7 @@ justify-content: center;
         <a class="Load">Load Game</a>
       </div>
     </div>
-    <script src="./js/soundmanager2.js"></script>
+ 
     <script type = "text/javascript">
 
 
@@ -149,7 +149,7 @@ btn.addEventListener('click',function () {
   menu.classList.toggle('hide');
   PlayGame();
   mainMusic.pause();
-  
+  return;
 
 
 });
@@ -286,7 +286,7 @@ animate() {
 
 }
      
-      setInterval(updateMap,50); // map animation
+   
       setInterval(update,200); // idle animation loop
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
@@ -488,15 +488,8 @@ animate() {
 
       }; 
 
-      var inventory = new Inventory(120, 8, 128, 32);
-      var items = [new Sprite(Math.random() * 240, 100, 96, 16, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 0, 32, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 16, 32, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 32, 32, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 48, 32, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 64, 32, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 80, 32, TILE_SIZE, TILE_SIZE),
-                   new Sprite(Math.random() * 240, 100, 96, 32, TILE_SIZE, TILE_SIZE)];
+      var inventory = new Inventory(120, 1, 128, 64);
+      var items = [new Sprite(Math.random() * 240, 100, 96, 16, TILE_SIZE, TILE_SIZE)];
 
 
       const keys = {
@@ -515,7 +508,7 @@ animate() {
       }
       var viewport = new Viewport(600, 600, 800, 800);
 
-      var pointer = { x:20, y:20,down:false };// The adjusted mouse position
+      var pointer = { x:0, y:0,down:false };// The adjusted mouse position
 
       function loop() {// The game loop
         let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
@@ -587,7 +580,7 @@ animate() {
             for (let y = y_min; y < y_max; y ++) {
 
               let value = map[y * columns + x];// Tile value
-              let layer2value = layer2[y * columns + x];// Tile value
+           
              
          
 
@@ -663,7 +656,7 @@ animate() {
         let item = inventory.items[index];
         let dest_x = inventory.x + index * TILE_SIZE * 2;
     
-        buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, dest_x, inventory.y, TILE_SIZE * 2, TILE_SIZE * 2);
+        // buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, dest_x, inventory.y, TILE_SIZE * 2, TILE_SIZE * 2);
 
         }
 
