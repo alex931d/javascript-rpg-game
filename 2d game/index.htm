@@ -161,6 +161,16 @@ function PlayGame() {
     
   });
 
+  class Npc{
+    constructor(x,y,sx,sy,w,h){
+
+      this.x = x; this.y = y; this.sx = sx; this.sy = sy; this.w = w; this.h = h;
+
+      this.vx = this.vy = 0;
+    }
+    
+  }
+
   class Sprite {
 
 constructor(x, y, sx, sy, w, h) {
@@ -599,34 +609,61 @@ animate() {
               const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
                
             }
-            if (keys.right.pressed && player.direction === 'right' && player.currentSprite !== player.sprites.run.right){
+            if (player.direction == 'right' && player.direction === 'right' && player.currentSprite !== player.sprites.run.right){
               player.frames = 1;
               player.currentSprite = player.sprites.run.right;
               player.currentCropWidth = player.sprites.run.cropWidth;
               player.width = player.sprites.run.width;
             }
-            else if (keys.left.pressed && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
+            else if (player.direction == 'left' && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
               player.frames = 1;
               player.currentSprite = player.sprites.left.left;
               player.currentCropWidth = player.sprites.left.cropWidth;
               player.width = player.sprites.left.width;
              
             }
-            else if (keys.up.pressed && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
+            else if (player.direction == 'up' && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
               player.frames = 1;
               player.currentSprite = player.sprites.up.up;
               player.currentCropWidth = player.sprites.up.cropWidth;
               player.width = player.sprites.up.width;
             }  
-            else if (keys.down.pressed && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
+            else if (player.direction == 'down' && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
               player.frames = 1;
               player.currentSprite = player.sprites.down.down;
               player.currentCropWidth = player.sprites.down.cropWidth;
               player.width = player.sprites.down.width;
             }
 
+            else if (!player.direction == 'idle' && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+            }
 
-            var front_item_index = undefined;// Index of item at very front of screen 
+            else if (!player.direction == 'idle' && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+            }
+            else if (!player.direction == 'idle' && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+            }
+            else if (!player.direction == 'idle' && player.direction === 'right' && player.currentSprite !== player.sprites.right.right) {
+              player.frames = 1;
+              player.currentSprite = player.sprites.stand.idle;
+              player.currentCropWidth = player.sprites.stand.cropWidth;
+              player.width = player.sprites.stand.width;
+            }
+         
+
+
+        var front_item_index = undefined;// Index of item at very front of screen 
          /* Draw the items */
         for (let index = items.length - 1; index > -1; -- index) {
 
@@ -656,7 +693,7 @@ animate() {
         let item = inventory.items[index];
         let dest_x = inventory.x + index * TILE_SIZE * 2;
     
-        // buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, dest_x, inventory.y, TILE_SIZE * 2, TILE_SIZE * 2);
+         buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, dest_x, inventory.y, TILE_SIZE * 2, TILE_SIZE * 2);
 
         }
 
@@ -801,6 +838,7 @@ animate() {
      switch (event.key) {
     case "ArrowDown": 
     keys.down.pressed = false ; 
+   player.direction = 'idle';
   
     
     player.currentSprite = player.sprites.stand.idle;
@@ -813,6 +851,7 @@ animate() {
       break;
     case "ArrowUp": 
     keys.up.pressed = false ; 
+    player.direction = 'idle';
     player.currentSprite = player.sprites.stand.idle;
               player.currentCropWidth = player.sprites.stand.cropWidth;
               player.width = player.sprites.stand.width;
@@ -820,12 +859,14 @@ animate() {
       break;
     case "ArrowLeft":
     keys.left.pressed = false ; 
+    player.direction = 'idle';
     player.currentSprite = player.sprites.stand.idle;
               player.currentCropWidth = player.sprites.stand.cropWidth;
               player.width = player.sprites.stand.width;
       break;
     case "ArrowRight":   
-    keys.right.pressed = false ; 
+    keys.right.pressed = false ;
+    player.direction = 'idle';
     
     player.currentSprite = player.sprites.stand.idle;
               player.currentCropWidth = player.sprites.stand.cropWidth;
