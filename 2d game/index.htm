@@ -546,18 +546,7 @@ animate() {
           context.canvas.width  = width;
 
           context.imageSmoothingEnabled = false;// prevent antialiasing of drawn image
-               // Click inventory
-          if (pointer.down && inventory.items.length > 0 && inventory.collidePoint(pointer)) {
-          
-          let index = Math.floor((pointer.x - inventory.x) / (inventory.w / inventory.columns));
 
-          pointer.x = player.x + player.w * 0.5;
-
-          let item = inventory.dropItem(index, player.x, player.y);
-
-          if (item) items.unshift(item);
-
-        }
 
 
 
@@ -671,39 +660,7 @@ animate() {
          
 
 
-        var front_item_index = undefined;// Index of item at very front of screen 
-         /* Draw the items */
-        for (let index = items.length - 1; index > -1; -- index) {
-
-          let item = items[index];
-
-          if (item.y + item.h >= player_index && item.collideRect(player) && pointer.down && item.collidePoint(pointer)) {
-              
-            front_item_index = index;// store the frontmost item index
-
-          }
-
-          item.updatePosition(1, 1, player_index);
-
-          buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, Math.round(item.x), Math.round(item.y), item.w, item.h);
-
-        }
-
-         // If there is an item selected, add it to the inventory
-         if (front_item_index != undefined && inventory.addItem(items[front_item_index])) items.splice(front_item_index, 1); 
-
-        /* Draw the inventory */
-        buffer.fillStyle = inventory.color;
-        buffer.fillRect(inventory.x, inventory.y, inventory.w, inventory.h);
-
-        for (let index = inventory.items.length - 1; index > -1; -- index) {
-
-        let item = inventory.items[index];
-        let dest_x = inventory.x + index * TILE_SIZE * 2;
-    
-         buffer.drawImage(tile_set, item.sx, item.sy, item.w, item.h, dest_x, inventory.y, TILE_SIZE * 2, TILE_SIZE * 2);
-
-        }
+   
 
           /* Draw to the display context */
           context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, context.canvas.width, context.canvas.height);
