@@ -11,11 +11,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./rain.css">
     <style>
+      
 
       * { margin:0; padding:0; }
 
-      html, body {
+      html, body  {
          background-color:#000000d7; height:100%; position:relative; width:100%;
          /* background-image: url(grass.png);  */
         position: relative;
@@ -63,12 +65,17 @@ image-rendering: pixelated;
 
   </head>
 
-  <body>
+  <body class="splat-toggle">
+    <div class="rain front-row"></div>
+  
+
+  </div>
 
     <canvas></canvas>
  
 
- 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./rain.js"></script>
     <script type = "text/javascript">
 
 
@@ -89,7 +96,11 @@ image-rendering: pixelated;
 
 // start game
 
-    
+
+
+
+
+
      
  document.addEventListener('load',function() {
     
@@ -320,6 +331,11 @@ animate() {
          
           /* Draw the player. Remember to offset by the viewport position and
           center screen position. */
+          context.shadowColor = "rgba(0, 0, 0, 0.30)";
+          context.shadowBlur = 5;
+          context.shadowOffsetX = 5;
+          context.shadowOffsetY = -2;
+      
           context.drawImage(this.currentSprite, this.currentCropWidth * player.frames, 0, this.currentCropWidth , 32, Math.round(player.x - viewport.x + width * 0.5 - viewport.w * 0.5), Math.round(player.y - viewport.y + height * 0.5 - viewport.h * 0.5), scaled_size * a, scaled_size * 2);
 
       
@@ -416,7 +432,7 @@ animate() {
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,19,19,31,32,32,32,32,32,32,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,67,19,31,32,32,32,32,32,32, //
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,34,35,35,35,38,32,32,
-                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,31,32,32,
+                 18,18,18,18,18,18,18,69,18,18,18,18,18,18,18,18,18,18,18,18,18,31,32,32,
                  18,18,18,18,18,18,1,2,2,2,2,2,3,18,18,18,18,18,18,18,18,31,32,32,
                  18,18,18,18,18,1,11,8,8,8,8,8,9,18,18,18,18,18,18,18,18,31,32,32,
                  18,18,18,18,18,7,8,8,8,8,8,8,10,2,3,0,18,18,18,18,18,31,32,32,
@@ -437,7 +453,9 @@ animate() {
             
 
       /* The drawing context of the on screen canvas */
+      
       var context = document.querySelector("canvas").getContext("2d");
+      
       var buffer= document.createElement("canvas").getContext("2d");
       /* The width and height of the inside of the browser window */
       var height = document.documentElement.clientHeight;
@@ -451,20 +469,19 @@ animate() {
       var animations = {
 
        
-        20: new Animator([22,23,24,25,26], 40),
-        67: new Animator([67,68], 40),
+        20: new Animator([22,23,24,25,26], 30),
+        67: new Animator([67,68], 30),
         // ocean animation.
-        31: new Animator([31,44,57], 40),
-        35: new Animator([35,48,61], 40),
-        30: new Animator([30,42,55], 40),
-        38: new Animator([38,51,64], 40),
-        40: new Animator([40,53,66], 40),
-        29: new Animator([29,42,55], 40),     
+        31: new Animator([31,44,57], 10),
+        35: new Animator([35,48,61], 10),
+        30: new Animator([30,42,55], 10),
+        38: new Animator([38,51,64], 10),
+        40: new Animator([40,53,66], 10),
+        29: new Animator([29,42,55], 10),     
 
       }; 
 
-      var inventory = new Inventory(120, 1, 128, 64);
-      var items = [new Sprite(Math.random() * 240, 100, 96, 16, TILE_SIZE, TILE_SIZE)];
+     
 
 
       const keys = {
@@ -552,6 +569,7 @@ animate() {
               var tile_y = Math.floor(y * scaled_size - viewport.y + height * 0.5 - viewport.h * 0.5);// Tile y destination for drawing
 
               // Draw tile from tile_sheet
+          
               const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
               
                 /* Draw the buffer to the canvas. This takes care of scaling. */
@@ -580,7 +598,7 @@ animate() {
               player.width = player.sprites.left.width;
              
             }
-            else if (player.direction == 'up' && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
+            else if (player.direction == 'up' && player.direction === 'up' && player.currentSprite !== player.sprites.up.up ) {
               player.frames = 1;
               a = 1;
               player.currentSprite = player.sprites.up.up;
@@ -626,7 +644,8 @@ animate() {
    
 
           /* Draw to the display context */
-          context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, context.canvas.width, context.canvas.height);
+          
+            context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, context.canvas.width, context.canvas.height);
 
         
       
@@ -683,12 +702,18 @@ animate() {
           player.Draw(idle_right);
 
           /* Draw the viewport rectangle. */
-          context.fillStyle = "#FF0000";
-          context.fillRect(width * 0.5 - viewport.w * 0.5, height * 0.4 + viewport.h * 0.5, viewport.w, 10);
-          context.font = "20px Arial";
-          context.fillText("HP",width * 0.5 - viewport.w * 0.5, height * 0.4 + viewport.h * 0.5);
+          /* context.fillStyle = "#000000";
+          context.shadowColor = "black";
+          context.shadowBlur = 6;
+          context.shadowOffsetX = 6;
+          context.shadowOffsetY = 6;
+          context.globalAlpha = 1;
+          context.fillRect(width * 0.5 - viewport.w * 0.5, height * 0.5 + viewport.h * 0.5, viewport.w, 600);
+       
+        
+          . */
          
-          context.rect(width * 0.5 - viewport.w * 0.5, height * 0.4 + viewport.h * 0.5, viewport.w, 10);
+      
           context.stroke();
           
         
@@ -702,8 +727,8 @@ animate() {
 
       tile_sheet.addEventListener("load", (event) => { loop(); });
 
-      tile_sheet.src = "map3.png";
-      layer2_sheet.src = "layer2.png";
+      tile_sheet.src = "map3_sep.png";
+      layer2_sheet.src = "layer2_sep.png";
       player_sheet.src = "player.png";
       rightrun.src = "player_run_right_animation.png";
       idle_right.src = "player_idle_right_animation.png";
@@ -712,13 +737,14 @@ animate() {
       attackleft.src = "player_attack_left_animation.png";
      
       leftrun.src = "player_run_left_animation.png";
-     console.log(player.direction);
+   
       document.addEventListener('click',function (event) {
         player.currentCropWidth = 16 * 3;
+       
         a = 3;
         
           if (player.direction === "right-up" || player.direction === "right" ||player.direction == null ) {
-          
+      
                 player.currentSprite = player.sprites.attackRight.attackRight;
                 player.direction = 'attack'; 
         
@@ -727,7 +753,7 @@ animate() {
             
           }
           if (player.direction === "left-up"|| player.direction === "left" ||player.direction == null ) {
-         
+      
                player.currentSprite = player.sprites.attackLeft.attackLeft; 
                player.direction = 'attack'; 
             
@@ -746,7 +772,7 @@ animate() {
      switch (event.key) {
     case "ArrowDown": 
     pointer.y += player.velocity; 
-    
+    player.direction == 'down';
   
     keys.down.pressed = true ; 
  
@@ -756,7 +782,7 @@ animate() {
       break;
     case "ArrowUp": 
     pointer.y -= player.velocity;
-  
+    player.direction == 'up'
     keys.up.pressed = true ; 
    
       // code for "up arrow" key press.
@@ -826,7 +852,7 @@ animate() {
     player.direction = 'right-up';
     keys.right.pressed = false ;
     a = 1;
-    
+  
     player.currentSprite = player.sprites.standRight.idle;
     player.currentCropWidth = player.sprites.standRight.cropWidth;
     player.width = player.sprites.standRight.width;
