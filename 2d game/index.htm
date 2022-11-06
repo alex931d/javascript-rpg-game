@@ -346,6 +346,7 @@ animate() {
       function update() {
         
            player.frames++;
+        
           if (player.frames >= 3 || this.currentSprite === player.sprites.standRight.idle ||
            this.currentSprite === player.sprites.up.up || this.currentSprite === player.sprites.left.left ||
             this.currentSprite === player.sprites.standLeft.idle || this.currentSprite === player.sprites.run.right ||
@@ -353,9 +354,34 @@ animate() {
             player.frames = 0;
             
           } 
+         
           
  
-      }
+      } 
+      function mapUpdate() {
+            layer3[216] = 106;
+            layer3[240] = 109;
+            layer3[264] = 112;
+            layer3[217] = 107;
+            layer3[241] = 110;
+            layer3[265] = 113;
+            layer3[218] = 108;
+            layer3[242] = 111;
+            layer3[266] = 114;
+
+
+
+            layer3[138] = 106;
+            layer3[162] = 109;
+            layer3[186] = 112;
+            layer3[139] = 107;
+            layer3[163] = 110;
+            layer3[187] = 113;
+            layer3[140] = 108;
+            layer3[164] = 111;
+            layer3[188] = 114;
+          }
+ 
           
          //   else if (player.frames >= 3 && this.currentSprite === player.sprites.stand.right) {
           //    player.frames = 0;
@@ -387,14 +413,16 @@ animate() {
         }
 
       };  
-      setInterval(update,150); // player animation loop
+      setInterval(update,150);
+      setInterval(mapUpdate,10); // player animation loop
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
-   
+      
      
       var tile_sheet = new Image();
       var player_sheet = new Image();
       var layer2_sheet = new Image(); 
+      var layer3_sheet = new Image(); 
       var tile_set = new Image();
       var scaled_size = 65;// The size I want my sprites to be;
     
@@ -427,13 +455,13 @@ animate() {
 
    var layer2 = [18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,31,32,32,32,32,32,32,
                  18,18,18,18,18,20,18,18,18,18,18,20,20,20,18,18,18,31,32,32,32,32,32,32,
-                 18,18,18,18,18,18,18,18,18,20,20,20,20,18,18,18,18,31,32,32,32,32,32,32,
-                 18,18,18,18,18,18,18,18,18,18,18,20,18,18,18,18,19,31,32,32,32,32,32,32,
-                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,19,19,31,32,32,32,32,32,32,
+                 18,18,18,18,18,18,18,18,18,20,20,20,20,18,18,18,80,31,32,32,32,32,32,32,
+                 18,18,20,19,18,18,18,18,18,18,18,20,18,18,18,18,19,31,32,32,32,32,32,32,
+                 18,18,18,20,18,18,18,18,18,18,18,18,18,18,18,19,19,31,32,32,32,32,32,32,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,67,19,31,32,32,32,32,32,32, //
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,34,35,35,35,38,32,32,
-                 18,18,18,18,18,18,18,69,18,18,18,18,18,18,18,18,18,18,18,18,18,31,32,32,
-                 18,18,18,18,18,18,1,2,2,2,2,2,3,18,18,18,18,18,18,18,18,31,32,32,
+                 18,18,19,18,18,18,18,69,18,20,20,18,18,18,18,18,18,18,18,18,18,31,32,32,
+                 18,19,19,18,18,18,1,2,2,2,2,2,3,18,18,18,18,18,18,18,18,31,32,32,
                  18,18,18,18,18,1,11,8,8,8,8,8,9,18,18,18,18,18,18,18,18,31,32,32,
                  18,18,18,18,18,7,8,8,8,8,8,8,10,2,3,0,18,18,18,18,18,31,32,32,
                  18,18,18,18,18,7,8,8,8,8,8,8,8,8,9,6,18,18,18,18,18,31,32,32,
@@ -449,12 +477,43 @@ animate() {
                  32,32,32,32,32,32,32,32,32,32,32,32,32,33,18,18,18,18,18,18,18,18,18,31,
                  32,32,32,32,32,32,32,32,32,32,32,32,32,39,29,29,29,29,29,29,29,29,29,40,
                  32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32];
+                 
+
+
+
+                 var layer3 = [
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,106,107,108,18,18,18, 
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,109,110,111,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,112,113,114,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,115,116,117,18,18,18,
+                 106,107,108,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 109,110,111,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 112,113,114,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 115,116,117,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18, 
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,38,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18];
+
 
             
 
       /* The drawing context of the on screen canvas */
       
       var context = document.querySelector("canvas").getContext("2d");
+     
       
       var buffer= document.createElement("canvas").getContext("2d");
       /* The width and height of the inside of the browser window */
@@ -571,18 +630,29 @@ animate() {
               // Draw tile from tile_sheet
           
               const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
-              
+           if (layer3[player_index] == 114 ||
+                layer3[player_index] == 113 ||
+                 layer3[player_index] == 112 ||
+                  layer3[player_index] == 111 ||
+                   layer3[player_index] == 110 ||
+                    layer3[player_index] == 109 ||
+                     layer3[player_index] == 108 ||
+                      layer3[player_index] == 107 ||
+                       layer3[player_index] == 106) layer3[player_index] = 18;
+                       
+                       
+                   
                 /* Draw the buffer to the canvas. This takes care of scaling. */
               // this.context.drawImage(this.buffer.canvas, 0, 0, this.buffer.canvas.width, this.buffer.canvas.height, 0, 0, this.context.canvas.width, this.context.canvas.height);
              
               // Draw layer 2 on top of map
               let value2 = layer2[y * columns + x];// Tile value   
-              
-             
+              let value3 = layer3[y * columns + x];
                if (animations[value2]) value2 = animations[value2].frame_value;
               const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
-               
-            }
+              const layermap3 = context.drawImage(layer3_sheet, value3 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
+            
+            }     
             if (player.direction == 'right' && player.direction === 'right' && player.currentSprite !== player.sprites.run.right && player.currentSprite !== player.sprites.attackRight.attackRight){
               player.frames = 1;
               a = 1;
@@ -647,13 +717,11 @@ animate() {
           
             context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, context.canvas.width, context.canvas.height);
 
-        
-      
+       
+           console.log(player_index);
      
           } // end of loop
-           if (layer2[player_index] == 67) {
-               
-              }
+          
 
           buffer.canvas.height = rows * TILE_SIZE;
          buffer.canvas.width  = columns * TILE_SIZE;
@@ -668,8 +736,11 @@ animate() {
           if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
     
         
-    
-
+         
+        
+          
+          
+       
 
           if (pointer.y < 0) {
             console.log('hit wall');
@@ -729,6 +800,7 @@ animate() {
 
       tile_sheet.src = "map3_sep.png";
       layer2_sheet.src = "layer2_sep.png";
+      layer3_sheet.src = "layer2_sep.png";
       player_sheet.src = "player.png";
       rightrun.src = "player_run_right_animation.png";
       idle_right.src = "player_idle_right_animation.png";
@@ -743,22 +815,22 @@ animate() {
        
         a = 3;
         
-          if (player.direction === "right-up" || player.direction === "right" ||player.direction == null ) {
-      
+          if (player.direction === "right-up" || player.direction === "right" || player.direction == null || player.direction == "attack") {
+          
                 player.currentSprite = player.sprites.attackRight.attackRight;
                 player.direction = 'attack'; 
         
-      
-            return;
+        
+                return;
             
           }
-          if (player.direction === "left-up"|| player.direction === "left" ||player.direction == null ) {
-      
+          if (player.direction === "left-up"|| player.direction === "left" || player.direction == null || player.direction == "attack") {
+             
                player.currentSprite = player.sprites.attackLeft.attackLeft; 
                player.direction = 'attack'; 
             
        
-            return;
+               return;
            
             
           }
