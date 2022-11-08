@@ -418,7 +418,7 @@ animate() {
       const TILE_SIZE = 16; // size of the sprites
       var sprite_size = 16;// The actual size of sprites / tiles in the tile_sheet image
       
-     
+      var rain = document.querySelector('.rain');
       var tile_sheet = new Image();
       var player_sheet = new Image();
       var layer2_sheet = new Image(); 
@@ -719,7 +719,17 @@ animate() {
 
        
            console.log(player_index);
-     
+           ;
+           if (player.direction == "left") {
+            rain.style.transform = "rotate(-20deg)";
+           }
+          else if(player.direction == "right"){
+            rain.style.transform = "rotate(20deg)";
+          }  
+          else if(player.direction == "left-up" || player.direction == "right-up"){
+            rain.style.transform = "rotate(0deg)";
+          }
+          
           } // end of loop
           
 
@@ -747,7 +757,7 @@ animate() {
             pointer.y = 0;
             
 
-          } else if (pointer.y + scaled_size > buffer.canvas.height ) {
+          } else if (pointer.y + scaled_size> buffer.canvas.height ) {
 
             console.log('hit wall');
            // pointer.y = 0;
@@ -844,6 +854,7 @@ animate() {
      switch (event.key) {
     case "ArrowDown": 
     pointer.y += player.velocity; 
+   
     player.direction == 'down';
   
     keys.down.pressed = true ; 
@@ -862,6 +873,7 @@ animate() {
     case "ArrowLeft":
     pointer.x -= player.velocity;  
     player.direction = 'left'; 
+ 
     keys.left.pressed = true ; 
     
    
@@ -874,6 +886,7 @@ animate() {
     case "ArrowRight":   
        pointer.x += player.velocity;
        player.direction = 'right';
+       
        keys.right.pressed = true ; 
      
       
