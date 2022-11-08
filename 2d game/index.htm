@@ -337,7 +337,7 @@ animate() {
           context.shadowOffsetY = -2;
       
           context.drawImage(this.currentSprite, this.currentCropWidth * player.frames, 0, this.currentCropWidth , 32, Math.round(player.x - viewport.x + width * 0.5 - viewport.w * 0.5), Math.round(player.y - viewport.y + height * 0.5 - viewport.h * 0.5), scaled_size * a, scaled_size * 2);
-
+        
       
         }
 
@@ -493,10 +493,10 @@ animate() {
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,115,116,117,18,18,18,
                  106,107,108,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
                  109,110,111,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
-                 112,113,114,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+                 112,113,114,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,161,18,
                  115,116,117,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
-                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18, 
+                 18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,130,18, 
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
                  18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
@@ -513,14 +513,14 @@ animate() {
       /* The drawing context of the on screen canvas */
       
       var context = document.querySelector("canvas").getContext("2d");
-     
+    
       
-      var buffer= document.createElement("canvas").getContext("2d");
+      var buffer= document.createElement("canvas").getContext("2d");  
+   
       /* The width and height of the inside of the browser window */
       var height = document.documentElement.clientHeight;
       var width  = document.documentElement.clientWidth;
-      
-      
+
     
       var player = new Player(100, 100,this.direction);
       var animation = new Animation();  
@@ -537,6 +537,7 @@ animate() {
         38: new Animator([38,51,64], 10),
         40: new Animator([40,53,66], 10),
         29: new Animator([29,42,55], 10),     
+        130: new Animator([130,131,132,134,135,156], 10),   
 
       }; 
 
@@ -648,10 +649,11 @@ animate() {
               // Draw layer 2 on top of map
               let value2 = layer2[y * columns + x];// Tile value   
               let value3 = layer3[y * columns + x];
-               if (animations[value2]) value2 = animations[value2].frame_value;
-              const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
+               if (animations[value2]) value2 = animations[value2].frame_value;         
+              const layermap2 = context.drawImage(layer2_sheet, value2 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);   
+
               const layermap3 = context.drawImage(layer3_sheet, value3 * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
-            
+                
             }     
             if (player.direction == 'right' && player.direction === 'right' && player.currentSprite !== player.sprites.run.right && player.currentSprite !== player.sprites.attackRight.attackRight){
               player.frames = 1;
@@ -729,7 +731,7 @@ animate() {
           
 
         
-          
+         
          
           
           // change the tile if player stands on it
@@ -767,7 +769,6 @@ animate() {
 
           }
           
-        
       
        
           player.Draw(idle_right);
@@ -829,7 +830,7 @@ animate() {
                player.currentSprite = player.sprites.attackLeft.attackLeft; 
                player.direction = 'attack'; 
             
-       
+               
                return;
            
             
