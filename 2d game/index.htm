@@ -65,17 +65,15 @@ image-rendering: pixelated;
 
   </head>
 
-  <body class="splat-toggle">
-    <div class="rain front-row"></div>
+  <body>
+
   
 
-  </div>
 
     <canvas></canvas>
  
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./rain.js"></script>
     <script type = "text/javascript">
 
 
@@ -87,14 +85,6 @@ image-rendering: pixelated;
 
 
 
-//  var mainMusic = new Audio('./sounds/main.mp3');
-
-// mainMusic.play();
-
-
-
-
-// start game
 
 
 
@@ -106,109 +96,9 @@ image-rendering: pixelated;
     
   });
    var a = 1;
-  class Npc{
-    constructor(x,y,sx,sy,w,h){
-
-      this.x = x; this.y = y; this.sx = sx; this.sy = sy; this.w = w; this.h = h;
-
-      this.vx = this.vy = 0;
-    }
-    
-  }
-
-  class Sprite {
-
-constructor(x, y, sx, sy, w, h) {
-
-  this.x = x; this.y = y; this.sx = sx; this.sy = sy; this.w = w; this.h = h;
-
-  this.vx = this.vy = 0;
-
-}
-
-collidePoint(point) {
-
-  if (point.x < this.x || point.x > this.x + this.w || point.y < this.y || point.y > this.y + this.h) return false;
-
-  return true;
-
-}
-
-collideRect(sprite) {
   
-  if (this.x > sprite.x + sprite.w || this.x + this.w < sprite.x || this.y > sprite.y + sprite.h || this.y + this.h < sprite.y) return false;
 
-  return true;
-      
-}
 
-updatePosition(gravity, friction, floor) {
-
-  this.vy += gravity;
-
-  this.x += this.vx;
-  this.y += this.vy;
-
-  this.vx *= friction;
-  this.vy *= friction;
-
-  if (this.y + this.h > floor) {
-
-    this.y = floor - this.h;
-    this.vy = 0;
-
-  }
-
-}
-
-}
-
-     
-  class Inventory {
-
-constructor(x, y, w, h) {
-
-  this.x = x; this.y = y; this.w = w; this.h = h;
-  this.color = "rgba(255, 255, 255, 0.5)";
-  this.items = new Array();
-  this.columns = 4;
-
-}
-
-addItem(sprite) {
-  
-  if (this.items.length == this.columns) {
-
-    sprite.vy = -4;
-    return false;
-
-  }
-
-  this.items.push(sprite)
-
-  return true;
-      
-}
-
-dropItem(index, x, y) {
-
-  var item = this.items[index];
-
-  if (item) {
-
-    this.items.splice(index, 1);
-    item.x = x;
-    item.y = y - item.h;
-    item.vx = Math.random() * 2 - 1;
-    item.vy = Math.random() * -5 - 1;
-
-  } return item;
-
-}
-
-}
-
-Inventory.prototype.collidePoint = Sprite.prototype.collidePoint;
 
 class Animator {
 
@@ -245,18 +135,14 @@ animate() {
   
      
       
-       //   SpriteUpRun.src ="UpRun.png";
-       //   SpriteDownRun.src =  "DownRun.png";
-       
-      /* The player is just a simple 2d point with a moveTo function. */
+
       const Animation = function () {
         this.frames = 0;
       }
       const Player = function(x, y,direction) {
       
         this.x = x; this.y = y;
-        // this.x_old = TILE_SIZE * 4 - TILE_SIZE * 0.5 + 2;
-        // this.y_old = TILE_SIZE * 8;
+
         this.direction = direction;
         this.frames = 0;
         this.width = scaled_size
@@ -328,9 +214,6 @@ animate() {
           this.height = 120;
          
 
-         
-          /* Draw the player. Remember to offset by the viewport position and
-          center screen position. */
           context.shadowColor = "rgba(0, 0, 0, 0.30)";
           context.shadowBlur = 5;
           context.shadowOffsetX = 5;
@@ -383,16 +266,7 @@ animate() {
           }
  
           
-         //   else if (player.frames >= 3 && this.currentSprite === player.sprites.stand.right) {
-          //    player.frames = 0;
-          //  }
-      
-   
 
-      /* The viewport (camera) is a rectangular region that defines the visible
-      area of the map to be drawn. It's x, y coordinates are relative to the map
-      itself, but you can easily draw its contents in a stationary location on screen,
-      thus giving the effect of scrolling. */
       const Viewport = function(x, y, w, h) {
 
         this.x = x; this.y = y; this.w = w; this.h = h;
@@ -406,9 +280,7 @@ animate() {
           this.x = x - this.w * 0.5;// Rigid scrolling
           this.y = y - this.w * 0.5;
 
-        
-          //this.x += (x - this.x - this.w * 0.5) * 0.05;
-          //this.y += (y - this.y - this.h * 0.5) * 0.05;
+
 
         }
 
@@ -512,9 +384,11 @@ animate() {
 
       /* The drawing context of the on screen canvas */
       
-      var context = document.querySelector("canvas").getContext("2d");
+      const canvas = document.querySelector('canvas');
+const context = canvas.getContext('2d');
     
-      
+
+
       var buffer= document.createElement("canvas").getContext("2d");  
    
       /* The width and height of the inside of the browser window */
@@ -560,8 +434,93 @@ animate() {
       }
       var viewport = new Viewport(600, 600, 800, 800);
 
-      var pointer = { x:0, y:0,down:false };// The adjusted mouse position
+      var pointer = { x:0, y:0,down:false };
+      
+      function checkMapCollide(player,pointer, height,width) {
+  if (player.x + sprite_size  <= 0) {
+    // Colliding with the left border
+    console.log("collide")
+    player.x = + scaled_size;
+    pointer.x = player.x
+  } else if (player.x + scaled_size >= width) {
+    // Colliding with the right border
+    console.log("collide")
+    player.x = width - scaled_size;
+    pointer.x = player.x
+  }
 
+  if (player.y + scaled_size >= height) {
+    // Colliding with the bottom border
+    console.log("collide")
+    player.y = height - scaled_size;
+    pointer.y = player.y
+  } else if (player.y + scaled_size <= 0) {
+    // Colliding with the top border
+    console.log("collide")
+    player.y = 0;
+        pointer.y = player.y
+  }
+}
+
+
+
+
+
+
+
+function checkTileCollide(playerIndex,columns,scaled_size, map, player,pointer) {
+  var collidingTiles = [18,20];
+
+  if (!collidingTiles.includes(map[playerIndex])) {
+ 
+    
+    var tileX = playerIndex % columns; // Column of the collided tile
+    var tileY = Math.floor(playerIndex / columns); // Row of the collided tile
+    
+    var tileXPos = tileX * scaled_size; // X position of the collided tile
+    var tileYPos = tileY * scaled_size; // Y position of the collided tile
+
+    var tileSize = map[tileY * columns + tileX]; // Tile size of the current tile
+    
+    if (player.x + sprite_size > tileXPos && player.x < tileXPos + tileSize) {
+      // Collision from the left or right side of the tile
+      if (player.x < tileXPos) {
+        // Collision from the left side of the tile
+        player.x = tileXPos - scaled_size; // Move player to the left of the tile
+        pointer.x = player.x
+      } else {
+        // Collision from the right side of the tile
+        player.x = tileXPos + tileSize; // Move player to the right of the tile
+        pointer.x = player.x
+      }
+    }
+
+    if (player.y + sprite_size > tileYPos && player.y < tileYPos + tileSize) {
+      // Collision from the top or bottom side of the tile
+      if (player.y + scaled_size < tileYPos) {
+        // Collision from the top side of the tile  
+         console.log("Collide");
+        player.y = tileYPos - scaled_size; // Move player above the tile
+        pointer.y = player.y
+      } else {
+        // Collision from the bottom side of the tile
+        player.y = tileYPos + tileSize; // Move player below the tile
+        pointer.y = player.y
+      }
+    }
+
+    viewport.x = player.x - viewport.w / 2;
+    viewport.y = player.y - viewport.h / 2;
+  }
+}
+
+
+
+
+
+       const  mapSize = scaled_size + viewport.w / 2 + width - scaled_size;
+      const maxViewportX = mapSize - viewport.w / 2;
+      const maxViewportY = mapSize - viewport.h / 2;
       function loop() {// The game loop
         let player_index = Math.floor((player.y + scaled_size * 0.5) / scaled_size) * columns + Math.floor((player.x + scaled_size * 0.5) / scaled_size);
 
@@ -573,37 +532,30 @@ animate() {
 
           });
           
-         
           var height = document.documentElement.clientHeight;
           var width  = document.documentElement.clientWidth;
-
           /* Resize canvas on every frame */
           context.canvas.height = height;
           context.canvas.width  = width;
-
           context.imageSmoothingEnabled = false;// prevent antialiasing of drawn image
 
-
-
-
-
-
-        
-
           player.moveTo(pointer.x, pointer.y);
-          viewport.scrollTo(player.x, player.y);
+       
 
-          /* Get the min and max column and row in the map to draw. For the min
-          column and row (x and y) we use floor to round down and for the max we
-          use ceil to round up. We want to get the rows and columns under the borders
-          of the viewport rectangle. This is visualized by the white square in the example. */
+// Clamp the player's position within the valid range
+const clampedPlayerX = Math.max(0, Math.min(player.x, maxViewportX));
+const clampedPlayerY = Math.max(0, Math.min(player.y, maxViewportY));
+
+// Scroll the viewport to the clamped player's position
+viewport.scrollTo(clampedPlayerX, clampedPlayerY);
+         
+
           var x_min = Math.floor(viewport.x / scaled_size);
           var y_min = Math.floor(viewport.y / scaled_size);
           var x_max = Math.ceil((viewport.x + viewport.w) / scaled_size);
           var y_max = Math.ceil((viewport.y + viewport.h) / scaled_size);
+       
 
-          /* the min and max column and row values cannot go beyond the boundaries
-          of the map. Those values are 0 and the number of columns and rows in the map. */
           if (x_min < 0) x_min = 0;
           if (y_min < 0) y_min = 0;
           if (x_max > columns) x_max = columns;
@@ -612,25 +564,20 @@ animate() {
        
 
           
-          /* Now we loop through the tiles in the map, but only between the min
-          and max columns and rows that the viewport is over. To do this we use two
-          for loops, one for the columns (x) and one for the rows (y) of the map. */
+
  
           for (let x = x_min; x < x_max; x ++) {
-
             for (let y = y_min; y < y_max; y ++) {
 
-              let value = map[y * columns + x];// Tile value
-           
+              var value = map[y * columns + x];// Tile value
              
-         
-
+          
               var tile_x = Math.floor(x * scaled_size - viewport.x + width * 0.5 - viewport.w * 0.5);// Tile x destination for drawing
               var tile_y = Math.floor(y * scaled_size - viewport.y + height * 0.5 - viewport.h * 0.5);// Tile y destination for drawing
-
               // Draw tile from tile_sheet
+              const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size); 
           
-              const layermap = context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, tile_x, tile_y, scaled_size, scaled_size);
+            
            if (layer3[player_index] == 114 ||
                 layer3[player_index] == 113 ||
                  layer3[player_index] == 112 ||
@@ -685,32 +632,7 @@ animate() {
               player.width = player.sprites.down.width;
             }
 
-            // else if (!player.direction == 'idle' && player.direction === 'down' && player.currentSprite !== player.sprites.down.down) {
-            //   player.frames = 1;
-            //   player.currentSprite = player.sprites.stand.idle;
-            //   player.currentCropWidth = player.sprites.stand.cropWidth;
-            //   player.width = player.sprites.stand.width;
-            // }
 
-            // else if (!player.direction == 'idle' && player.direction === 'up' && player.currentSprite !== player.sprites.up.up) {
-            //   player.frames = 1;
-            //   player.currentSprite = player.sprites.stand.idle;
-            //   player.currentCropWidth = player.sprites.stand.cropWidth;
-            //   player.width = player.sprites.stand.width;
-            // }
-            // else if (!player.direction == 'idle' && player.direction === 'left' && player.currentSprite !== player.sprites.left.left) {
-            //   player.frames = 1;
-            //   player.currentSprite = player.sprites.stand.idle;
-            //   player.currentCropWidth = player.sprites.stand.cropWidth;
-            //   player.width = player.sprites.stand.width;
-            // }
-            // else if (!player.direction == 'idle' && player.direction === 'right' && player.currentSprite !== player.sprites.right.right) {
-            //   player.frames = 1;
-            //   player.currentSprite = player.sprites.stand.idle;
-            //   player.currentCropWidth = player.sprites.stand.cropWidth;
-            //   player.width = player.sprites.stand.width;
-            // }
-         
 
 
    
@@ -719,89 +641,34 @@ animate() {
           
             context.drawImage(buffer.canvas, 0, 0, buffer.canvas.width, buffer.canvas.height, 0, 0, context.canvas.width, context.canvas.height);
 
-       
-           console.log(player_index);
-     
-          } // end of loop
-          
-
+  
+          }
+         checkTileCollide(player_index,columns,scaled_size,layer2,player,pointer)
+         checkMapCollide(player,pointer, mapSize - scaled_size / 2 - sprite_size ,mapSize)
           buffer.canvas.height = rows * TILE_SIZE;
          buffer.canvas.width  = columns * TILE_SIZE;
+
          buffer.imageSmoothingEnabled = false;
           
-
-        
-         
-         
-          
-          // change the tile if player stands on it
-          if (layer2[player_index] == 20 || map[player_index] == 21) layer2[player_index] = 18; 
-    
-        
-         
-        
-          
-          
-       
-
-          if (pointer.y < 0) {
-            console.log('hit wall');
-            pointer.y = 0;
-            
-
-          } else if (pointer.y + scaled_size > buffer.canvas.height ) {
-
-            console.log('hit wall');
-           // pointer.y = 0;
-         
-
-          }
-
-          if (pointer.x < 0) {
-            console.log('hit wall');
-          pointer.x = 0;
-        
-
-          } else if (pointer.x + scaled_size > buffer.canvas.width ) {
-            console.log('hit wall');
-           // pointer.x = 0;
- 
-
-          }
-          
-      
        
           player.Draw(idle_right);
 
-          /* Draw the viewport rectangle. */
-          /* context.fillStyle = "#000000";
-          context.shadowColor = "black";
-          context.shadowBlur = 6;
-          context.shadowOffsetX = 6;
-          context.shadowOffsetY = 6;
-          context.globalAlpha = 1;
-          context.fillRect(width * 0.5 - viewport.w * 0.5, height * 0.5 + viewport.h * 0.5, viewport.w, 600);
-       
-        
-          . */
-         
       
           context.stroke();
           
         
  
       }
+
+
+
+
      
-     
-
-
-    
-
       tile_sheet.addEventListener("load", (event) => { loop(); });
 
-      tile_sheet.src = "map3_sep.png";
-      layer2_sheet.src = "layer2_sep.png";
-      layer3_sheet.src = "layer2_sep.png";
+      tile_sheet.src = "map3.png";
+      layer2_sheet.src = "layer2.png";
+      layer3_sheet.src = "layer2.png";
       player_sheet.src = "player.png";
       rightrun.src = "player_run_right_animation.png";
       idle_right.src = "player_idle_right_animation.png";
@@ -811,35 +678,7 @@ animate() {
      
       leftrun.src = "player_run_left_animation.png";
    
-      document.addEventListener('click',function (event) {
-        player.currentCropWidth = 16 * 3;
-       
-        a = 3;
-        
-          if (player.direction === "right-up" || player.direction === "right" || player.direction == null || player.direction == "attack") {
-          
-                player.currentSprite = player.sprites.attackRight.attackRight;
-                player.direction = 'attack'; 
-        
-        
-                return;
-            
-          }
-          if (player.direction === "left-up"|| player.direction === "left" || player.direction == null || player.direction == "attack") {
-             
-               player.currentSprite = player.sprites.attackLeft.attackLeft; 
-               player.direction = 'attack'; 
-            
-               
-               return;
-           
-            
-          }
-          player.currentSprite = player.sprites.standRight.idle;
-          
-    
-      });
-     
+
       document.addEventListener("keydown", (event) => {
      
      switch (event.key) {
@@ -894,7 +733,7 @@ animate() {
      switch (event.key) {
     case "ArrowDown": 
     keys.down.pressed = false ; 
-    a = 1;
+
   
     
     player.currentSprite = player.sprites.standLeft.idle;
@@ -907,7 +746,7 @@ animate() {
       break;
     case "ArrowUp": 
     keys.up.pressed = false ; 
-    a = 1;
+
     player.currentSprite = player.sprites.standRight.idle;
     player.currentCropWidth = player.sprites.standRight.cropWidth;
     player.width = player.sprites.standRight.width;
@@ -916,7 +755,7 @@ animate() {
     case "ArrowLeft":
     player.direction = 'left-up';
     keys.left.pressed = false ; 
-    a = 1;
+
     player.currentSprite = player.sprites.standLeft.idle;
     player.currentCropWidth = player.sprites.standLeft.cropWidth;
     player.width = player.sprites.standLeft.width;
@@ -924,7 +763,7 @@ animate() {
     case "ArrowRight":   
     player.direction = 'right-up';
     keys.right.pressed = false ;
-    a = 1;
+
   
     player.currentSprite = player.sprites.standRight.idle;
     player.currentCropWidth = player.sprites.standRight.cropWidth;
